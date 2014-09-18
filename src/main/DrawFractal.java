@@ -14,32 +14,28 @@ public class DrawFractal {
         resultImageGraphics.fillRect(0, 0, width, height);
         resultImageGraphics.setColor(Color.WHITE);
 
-        double xr, xm, cr, cm;
         double stepX = (xMax - xMin) / width;
         double stepY = (yMax - yMin) / width;
         int x, y;
 
         x = 0;
-        for (cr = xMin; cr < xMax; cr += stepX, x++) {
+        ComplexNumber c = new ComplexNumber(0, 0);
+        for (c.setX(xMin); c.real()< xMax; c.addX(stepX), x++) {
             y = 0;
-            for (cm = yMin; cm < yMax; cm += stepY, y++) {
+            for (c.setY(yMin); c.imag() < yMax; c.addY(stepY), y++) {
 
-                xr = 0.0;
-                xm = 0.0;
-
+                ComplexNumber z = new ComplexNumber(0, 0);
                 int i = 0;
-                while (xr * xr + xm * xm <= 4 && i < iteration) {
-                    double tempXr = xr * xr - xm * xm + cr;
-                    double tempXm = 2 * xr * xm + cm;
-                    xr = tempXr;
-                    xm = tempXm;
+                while (z.mod() <= 2 && i < iteration) {
+
+                    z = z.times(z).plus(c);
                     i++;
                 }
 
-                if (xr * xr + xm * xm > 4) {
-                    float col = (300f - i) / 300f;
+                if (z.mod() > 2) {
+                    float col = (200f - i) / 200f;
                     col = Math.max(col, 0);
-                    resultImageGraphics.setColor(new Color(col, col, col));
+                    resultImageGraphics.setColor(new Color(col, 0.5f, 1f));
                     resultImageGraphics.drawLine(x, y, x, y);
                 }
             }
